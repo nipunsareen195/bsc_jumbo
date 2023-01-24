@@ -207,9 +207,9 @@ func (p *Peer) markTransaction(hash common.Hash) {
 // tests that directly send messages without having to do the asyn queueing.
 func (p *Peer) SendTransactions(txs types.Transactions) error {
 	// Mark all the transactions as known, but ensure we don't overflow our limits
-	fmt.Print("broadcastTransactions - 5")
+	fmt.Println("broadcastTransactions - 5")
 	for _, tx := range txs {
-		fmt.Print("broadcastTransactions - 6")
+		fmt.Println("broadcastTransactions - 6")
 		p.knownTxs.Add(tx.Hash())
 		fmt.Println(p.knownTxs)
 	}

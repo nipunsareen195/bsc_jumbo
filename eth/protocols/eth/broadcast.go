@@ -71,7 +71,7 @@ func (p *Peer) broadcastBlocks() {
 // node internals and at the same time rate limits queued data.
 func (p *Peer) broadcastTransactions() {
 	fmt.Println("---------")
-	fmt.Print("broadcastTransactions")
+	fmt.Println("broadcastTransactions")
 	var (
 		queue  []common.Hash         // Queue of hashes to broadcast as full transactions
 		done   chan struct{}         // Non-nil if background broadcaster is running
@@ -81,7 +81,7 @@ func (p *Peer) broadcastTransactions() {
 	for {
 		// If there's no in-flight broadcast running, check if a new one is needed
 		if done == nil && len(queue) > 0 {
-			fmt.Print("broadcastTransactions - 1")
+			fmt.Println("broadcastTransactions - 1")
 			// Pile transaction until we reach our allowed network limit
 			var (
 				hashesCount uint64
@@ -89,7 +89,7 @@ func (p *Peer) broadcastTransactions() {
 				size        common.StorageSize
 			)
 			for i := 0; i < len(queue) && size < maxTxPacketSize; i++ {
-				fmt.Print("broadcastTransactions - 2")
+				fmt.Println("broadcastTransactions - 2")
 				if tx := p.txpool.Get(queue[i]); tx != nil {
 					txs = append(txs, tx)
 					size += tx.Size()
@@ -99,14 +99,14 @@ func (p *Peer) broadcastTransactions() {
 			queue = queue[:copy(queue, queue[hashesCount:])]
 
 			// If there's anything available to transfer, fire up an async writer
-			fmt.Print("broadcastTransactions - 3")
+			fmt.Println("broadcastTransactions - 3")
 			if len(txs) > 0 {
-				fmt.Print("broadcastTransactions - 4")
+				fmt.Println("broadcastTransactions - 4")
 				done = make(chan struct{})
 				go func() {
 					fmt.Print("broadcastTransactions - 4.1")
 					if err := p.SendTransactions(txs); err != nil {
-						fmt.Print("broadcastTransactions - 4.....")
+						fmt.Println("broadcastTransactions - 4.....")
 						fail <- err
 						return
 					}
