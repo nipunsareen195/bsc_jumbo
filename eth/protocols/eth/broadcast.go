@@ -116,13 +116,22 @@ func (p *Peer) broadcastTransactions() {
 		// Transfer goroutine may or may not have been started, listen for events
 		select {
 		case hashes := <-p.txBroadcast:
+			// fmt.Println(p.txBroadcast)
 			fmt.Print("broadcastTransactions - 7")
+			fmt.Println(queue)
+			fmt.Println("---------")
 			// If the connection failed, discard all transaction events
 			if failed {
+				fmt.Print("broadcastTransactions - 7.1")
 				continue
 			}
+
 			// New batch of transactions to be broadcast, queue them (with cap)
 			queue = append(queue, hashes...)
+			fmt.Println("---------")
+			fmt.Println(hashes)
+			fmt.Println(queue)
+			fmt.Println("---------")
 			if len(queue) > maxQueuedTxs {
 				fmt.Print("broadcastTransactions - 8")
 				// Fancy copy and resize to ensure buffer doesn't grow indefinitely
