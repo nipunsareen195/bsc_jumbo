@@ -104,7 +104,9 @@ func (p *Peer) broadcastTransactions() {
 				fmt.Print("broadcastTransactions - 4")
 				done = make(chan struct{})
 				go func() {
+					fmt.Print("broadcastTransactions - 4.1")
 					if err := p.SendTransactions(txs); err != nil {
+						fmt.Print("broadcastTransactions - 4.....")
 						fail <- err
 						return
 					}
@@ -133,14 +135,11 @@ func (p *Peer) broadcastTransactions() {
 			fmt.Println(queue)
 			fmt.Println("---------")
 
-			fmt.Print("broadcastTransactions - 8")
-			// Fancy copy and resize to ensure buffer doesn't grow indefinitely
-			queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
-			// if len(queue) > maxQueuedTxs {
-			// 	fmt.Print("broadcastTransactions - 8")
-			// 	// Fancy copy and resize to ensure buffer doesn't grow indefinitely
-			// 	queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
-			// }
+			if len(queue) > maxQueuedTxs {
+				fmt.Print("broadcastTransactions - 8")
+				// Fancy copy and resize to ensure buffer doesn't grow indefinitely
+				queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
+			}
 
 		case <-done:
 			done = nil

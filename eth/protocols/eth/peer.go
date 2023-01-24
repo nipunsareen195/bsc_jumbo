@@ -211,6 +211,7 @@ func (p *Peer) SendTransactions(txs types.Transactions) error {
 	for _, tx := range txs {
 		fmt.Print("broadcastTransactions - 6")
 		p.knownTxs.Add(tx.Hash())
+		fmt.Println(p.knownTxs)
 	}
 	return p2p.Send(p.rw, TransactionsMsg, txs)
 }
