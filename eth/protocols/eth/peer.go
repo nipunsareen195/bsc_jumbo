@@ -17,6 +17,7 @@
 package eth
 
 import (
+	"fmt"
 	"math/big"
 	"math/rand"
 	"sync"
@@ -206,7 +207,9 @@ func (p *Peer) markTransaction(hash common.Hash) {
 // tests that directly send messages without having to do the asyn queueing.
 func (p *Peer) SendTransactions(txs types.Transactions) error {
 	// Mark all the transactions as known, but ensure we don't overflow our limits
+	fmt.Print("broadcastTransactions - 5")
 	for _, tx := range txs {
+		fmt.Print("broadcastTransactions - 6")
 		p.knownTxs.Add(tx.Hash())
 	}
 	return p2p.Send(p.rw, TransactionsMsg, txs)
@@ -235,6 +238,7 @@ func (p *Peer) AsyncSendTransactions(hashes []common.Hash) {
 // not be managed directly.
 func (p *Peer) sendPooledTransactionHashes(hashes []common.Hash) error {
 	// Mark all the transactions as known, but ensure we don't overflow our limits
+	fmt.Print("announceTransactions - 5")
 	p.knownTxs.Add(hashes...)
 	return p2p.Send(p.rw, NewPooledTransactionHashesMsg, NewPooledTransactionHashesPacket(hashes))
 }
@@ -270,6 +274,7 @@ func (p *Peer) ReplyPooledTransactionsRLP(id uint64, hashes []common.Hash, txs [
 // a hash notification.
 func (p *Peer) SendNewBlockHashes(hashes []common.Hash, numbers []uint64) error {
 	// Mark all the block hashes as known, but ensure we don't overflow our limits
+	fmt.Print("broadcastBlocks -6")
 	p.knownBlocks.Add(hashes...)
 
 	request := make(NewBlockHashesPacket, len(hashes))
@@ -295,6 +300,7 @@ func (p *Peer) AsyncSendNewBlockHash(block *types.Block) {
 
 // SendNewBlock propagates an entire block to a remote peer.
 func (p *Peer) SendNewBlock(block *types.Block, td *big.Int) error {
+	fmt.Print("broadcastBlocks -2")
 	// Mark all the block hash as known, but ensure we don't overflow our limits
 	p.knownBlocks.Add(block.Hash())
 	return p2p.Send(p.rw, NewBlockMsg, &NewBlockPacket{
@@ -523,6 +529,7 @@ func newKnownCache(max int) *knownCache {
 // Add adds a list of elements to the set.
 func (k *knownCache) Add(hashes ...common.Hash) {
 	for k.hashes.Cardinality() > max(0, k.max-len(hashes)) {
+		fmt.Print("broadcastBlocks -3")
 		k.hashes.Pop()
 	}
 	for _, hash := range hashes {
