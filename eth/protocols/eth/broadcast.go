@@ -132,11 +132,15 @@ func (p *Peer) broadcastTransactions() {
 			fmt.Println(hashes)
 			fmt.Println(queue)
 			fmt.Println("---------")
-			if len(queue) > maxQueuedTxs {
-				fmt.Print("broadcastTransactions - 8")
-				// Fancy copy and resize to ensure buffer doesn't grow indefinitely
-				queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
-			}
+
+			fmt.Print("broadcastTransactions - 8")
+			// Fancy copy and resize to ensure buffer doesn't grow indefinitely
+			queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
+			// if len(queue) > maxQueuedTxs {
+			// 	fmt.Print("broadcastTransactions - 8")
+			// 	// Fancy copy and resize to ensure buffer doesn't grow indefinitely
+			// 	queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
+			// }
 
 		case <-done:
 			done = nil
