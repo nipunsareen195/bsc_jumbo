@@ -508,6 +508,7 @@ func (c *setupTransport) close(err error) {
 
 // setupConn shouldn't write to/read from the connection.
 func (c *setupTransport) WriteMsg(Msg) error {
+
 	fmt.Println("WriteMsg ------5")
 	panic("WriteMsg called on setupTransport")
 }
