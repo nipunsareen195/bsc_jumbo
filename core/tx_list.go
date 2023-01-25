@@ -18,6 +18,7 @@ package core
 
 import (
 	"container/heap"
+	"fmt"
 	"math"
 	"math/big"
 	"sort"
@@ -79,6 +80,7 @@ func (m *txSortedMap) Get(nonce uint64) *types.Transaction {
 // Put inserts a new transaction into the map, also updating the map's nonce
 // index. If a transaction already exists with the same nonce, it's overwritten.
 func (m *txSortedMap) Put(tx *types.Transaction) {
+	fmt.Println("----Put=======")
 	nonce := tx.Nonce()
 	if m.items[nonce] == nil {
 		heap.Push(m.index, nonce)

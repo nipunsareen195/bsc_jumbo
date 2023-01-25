@@ -364,12 +364,15 @@ func (p *Peer) handle(msg Msg) error {
 		return msg.Discard()
 	default:
 		fmt.Println("-----++++4")
+
 		// it's a subprotocol message
 		proto, err := p.getProto(msg.Code)
 		if err != nil {
+			fmt.Println("-----++++4 errr")
 			return fmt.Errorf("msg code out of range: %v", msg.Code)
 		}
 		if metrics.Enabled {
+			fmt.Println("-----++++4.1")
 			m := fmt.Sprintf("%s/%s/%d/%#02x", ingressMeterName, proto.Name, proto.Version, msg.Code-proto.offset)
 			metrics.GetOrRegisterMeter(m, nil).Mark(int64(msg.meterSize))
 			metrics.GetOrRegisterMeter(m+"/packets", nil).Mark(1)

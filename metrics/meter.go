@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -24,6 +25,7 @@ type Meter interface {
 // Be sure to unregister the meter from the registry once it is of no use to
 // allow for garbage collection.
 func GetOrRegisterMeter(name string, r Registry) Meter {
+	fmt.Println("-----++++4.2")
 	if nil == r {
 		r = DefaultRegistry
 	}
