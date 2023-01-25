@@ -131,6 +131,7 @@ func newMeteredMsgWriter(rw p2p.MsgReadWriter, version int) p2p.MsgReadWriter {
 func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) {
 	// Read the message and short circuit in case of an error
 	msg, err := rw.MsgReadWriter.ReadMsg()
+	fmt.Println("+++++11")
 	if err != nil {
 		return msg, err
 	}

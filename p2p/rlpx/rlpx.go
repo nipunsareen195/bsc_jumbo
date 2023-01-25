@@ -416,6 +416,7 @@ type authRespV4 struct {
 func (h *handshakeState) runRecipient(conn io.ReadWriter, prv *ecdsa.PrivateKey) (s Secrets, err error) {
 	authMsg := new(authMsgV4)
 	authPacket, err := h.readMsg(authMsg, prv, conn)
+	fmt.Println("+++++17")
 	if err != nil {
 		return s, err
 	}
@@ -532,6 +533,7 @@ func (h *handshakeState) runInitiator(conn io.ReadWriter, prv *ecdsa.PrivateKey,
 
 	authRespMsg := new(authRespV4)
 	authRespPacket, err := h.readMsg(authRespMsg, prv, conn)
+	fmt.Println("+++++18")
 	if err != nil {
 		return s, err
 	}

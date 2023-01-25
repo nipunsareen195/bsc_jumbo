@@ -18,6 +18,7 @@ package les
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -128,6 +129,7 @@ func (h *serverHandler) handle(p *clientPeer) error {
 			return err
 		}
 		_, err := p.rw.ReadMsg()
+		fmt.Println("+++++13")
 		h.server.serverset.unregister(p)
 		return err
 	}
@@ -270,6 +272,7 @@ func (h *serverHandler) afterHandle(p *clientPeer, reqID, responseCount uint64, 
 func (h *serverHandler) handleMsg(p *clientPeer, wg *sync.WaitGroup) error {
 	// Read the next message from the remote peer, and ensure it's fully consumed
 	msg, err := p.rw.ReadMsg()
+	fmt.Println("+++++13")
 	if err != nil {
 		return err
 	}

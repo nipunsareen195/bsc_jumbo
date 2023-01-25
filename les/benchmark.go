@@ -261,6 +261,7 @@ type meteredPipe struct {
 }
 
 func (m *meteredPipe) ReadMsg() (p2p.Msg, error) {
+	fmt.Println("---+++++8")
 	return m.rw.ReadMsg()
 }
 
@@ -319,6 +320,7 @@ func (h *serverHandler) measure(setup *benchmarkSetup, count int) error {
 	go func() {
 		for i := 0; i < count; i++ {
 			msg, err := clientPipe.ReadMsg()
+			fmt.Println("+++++9")
 			if err != nil {
 				errCh <- err
 				return

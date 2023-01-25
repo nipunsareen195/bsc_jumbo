@@ -65,6 +65,7 @@ func (p *Peer) Handshake(diffSync bool) error {
 // readStatus reads the remote handshake message.
 func (p *Peer) readCap(cap *DiffCapPacket) error {
 	msg, err := p.rw.ReadMsg()
+	fmt.Println("++++2")
 	if err != nil {
 		return err
 	}

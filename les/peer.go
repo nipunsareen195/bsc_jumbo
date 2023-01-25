@@ -217,6 +217,7 @@ func (p *peerCommons) sendReceiveHandshake(sendList keyValueList) (keyValueList,
 	go func() {
 		// In the mean time retrieve the remote status message
 		msg, err := p.rw.ReadMsg()
+		fmt.Println("+++++12")
 		if err != nil {
 			errc <- err
 			return

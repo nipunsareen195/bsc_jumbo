@@ -18,6 +18,7 @@ package les
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 	"math/rand"
 	"sync"
@@ -169,6 +170,7 @@ func (h *clientHandler) handle(p *serverPeer, noInitAnnounce bool) error {
 func (h *clientHandler) handleMsg(p *serverPeer) error {
 	// Read the next message from the remote peer, and ensure it's fully consumed
 	msg, err := p.rw.ReadMsg()
+	fmt.Println("+++++10")
 	if err != nil {
 		return err
 	}

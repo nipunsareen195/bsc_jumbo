@@ -158,6 +158,7 @@ func (t *rlpxTransport) doProtoHandshake(our *protoHandshake) (their *protoHands
 
 func readProtocolHandshake(rw MsgReader) (*protoHandshake, error) {
 	msg, err := rw.ReadMsg()
+	fmt.Println("+++++16")
 	if err != nil {
 		return nil, err
 	}

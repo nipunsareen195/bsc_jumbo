@@ -17,6 +17,7 @@
 package simulations
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/p2p"
@@ -49,6 +50,7 @@ func (t *NoopService) Protocols() []p2p.Protocol {
 					close(t.c[peer.ID()])
 				}
 				rw.ReadMsg()
+				fmt.Println("+++++19")
 				return nil
 			},
 			NodeInfo: func() interface{} {

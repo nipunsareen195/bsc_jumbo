@@ -122,6 +122,7 @@ func (p *Peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 // readStatus reads the remote handshake message.
 func (p *Peer) readStatus(network uint64, status *StatusPacket, genesis common.Hash, forkFilter forkid.Filter) error {
 	msg, err := p.rw.ReadMsg()
+	fmt.Println("+++++4")
 	if err != nil {
 		return err
 	}
@@ -152,6 +153,7 @@ func (p *Peer) readStatus(network uint64, status *StatusPacket, genesis common.H
 
 func (p *Peer) readUpgradeStatus(status *UpgradeStatusPacket) error {
 	msg, err := p.rw.ReadMsg()
+	fmt.Println("+++++5")
 	if err != nil {
 		return err
 	}

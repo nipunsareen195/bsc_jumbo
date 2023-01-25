@@ -244,6 +244,7 @@ func (p *MsgPipeRW) Close() error {
 func ExpectMsg(r MsgReader, code uint64, content interface{}) error {
 	fmt.Println("ExpectMsg  ---")
 	msg, err := r.ReadMsg()
+	fmt.Println("+++++14")
 	if err != nil {
 		return err
 	}
@@ -300,6 +301,7 @@ func newMsgEventer(rw MsgReadWriter, feed *event.Feed, peerID enode.ID, proto, r
 func (ev *msgEventer) ReadMsg() (Msg, error) {
 	fmt.Println("ReadMsg 000  ---")
 	msg, err := ev.MsgReadWriter.ReadMsg()
+	fmt.Println("+++++14")
 	if err != nil {
 		return msg, err
 	}

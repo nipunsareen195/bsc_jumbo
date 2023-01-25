@@ -330,6 +330,7 @@ func (p *Peer) readLoop(errc chan<- error) {
 	defer p.wg.Done()
 	for {
 		msg, err := p.rw.ReadMsg()
+		fmt.Println("+++++15")
 		if err != nil {
 			errc <- err
 			return

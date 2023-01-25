@@ -153,6 +153,7 @@ func (p *pingPongService) Run(peer *p2p.Peer, rw p2p.MsgReadWriter) error {
 	gopool.Submit(func() {
 		for {
 			msg, err := rw.ReadMsg()
+			fmt.Println("+++++20")
 			if err != nil {
 				errC <- err
 				return

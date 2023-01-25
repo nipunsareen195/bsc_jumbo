@@ -186,6 +186,7 @@ var eth66 = map[uint64]msgHandler{
 func handleMessage(backend Backend, peer *Peer) error {
 	// Read the next message from the remote peer, and ensure it's fully consumed
 	msg, err := peer.rw.ReadMsg()
+	fmt.Println("+++++3")
 	if err != nil {
 		return err
 	}
