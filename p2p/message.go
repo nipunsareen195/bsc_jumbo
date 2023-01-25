@@ -85,6 +85,7 @@ type MsgWriter interface {
 	// Note that messages can be sent only once because their
 	// payload reader is drained.
 	WriteMsg(Msg) error
+	// WriteMsg1(Msg) error
 }
 
 // MsgReadWriter provides reading and writing of encoded messages.

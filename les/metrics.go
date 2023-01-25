@@ -17,6 +17,8 @@
 package les
 
 import (
+	"fmt"
+
 	"github.com/ethereum/go-ethereum/metrics"
 	"github.com/ethereum/go-ethereum/p2p"
 )
@@ -141,6 +143,8 @@ func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) {
 }
 
 func (rw *meteredMsgReadWriter) WriteMsg(msg p2p.Msg) error {
+
+	fmt.Println("WriteMsg ------2")
 	// Account for the data traffic
 	packets, traffic := miscOutPacketsMeter, miscOutTrafficMeter
 	packets.Mark(1)

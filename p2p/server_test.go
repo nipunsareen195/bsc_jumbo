@@ -20,6 +20,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/sha256"
 	"errors"
+	"fmt"
 	"io"
 	"math/rand"
 	"net"
@@ -507,6 +508,7 @@ func (c *setupTransport) close(err error) {
 
 // setupConn shouldn't write to/read from the connection.
 func (c *setupTransport) WriteMsg(Msg) error {
+	fmt.Println("WriteMsg ------5")
 	panic("WriteMsg called on setupTransport")
 }
 func (c *setupTransport) ReadMsg() (Msg, error) {

@@ -80,6 +80,7 @@ func (t *rlpxTransport) ReadMsg() (Msg, error) {
 }
 
 func (t *rlpxTransport) WriteMsg(msg Msg) error {
+	fmt.Println("WriteMsg ------5")
 	t.wmu.Lock()
 	defer t.wmu.Unlock()
 

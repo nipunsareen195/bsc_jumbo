@@ -209,6 +209,8 @@ func (h *sessionState) readFrame(conn io.Reader) ([]byte, error) {
 // Write returns the written size of the message data. This may be less than or equal to
 // len(data) depending on whether snappy compression is enabled.
 func (c *Conn) Write(code uint64, data []byte) (uint32, error) {
+
+	fmt.Println("Write ------1")
 	if c.session == nil {
 		panic("can't WriteMsg before handshake")
 	}

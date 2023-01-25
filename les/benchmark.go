@@ -265,6 +265,7 @@ func (m *meteredPipe) ReadMsg() (p2p.Msg, error) {
 }
 
 func (m *meteredPipe) WriteMsg(msg p2p.Msg) error {
+	fmt.Println("WriteMsg ------1")
 	if msg.Size > m.maxSize {
 		m.maxSize = msg.Size
 	}

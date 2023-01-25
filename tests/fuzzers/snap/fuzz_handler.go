@@ -111,6 +111,7 @@ func (d *dummyRW) ReadMsg() (p2p.Msg, error) {
 }
 
 func (d *dummyRW) WriteMsg(msg p2p.Msg) error {
+	fmt.Println("WriteMsg ------7")
 	d.writeCount++
 	return nil
 }
