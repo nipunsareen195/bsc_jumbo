@@ -136,8 +136,11 @@ type eofSignal struct {
 // note: when using eofSignal to detect whether a message payload
 // has been read, Read might not be called for zero sized messages.
 func (r *eofSignal) Read(buf []byte) (int, error) {
+	fmt.Println("read  ---")
 	if r.count == 0 {
+		fmt.Println("read  --- 1")
 		if r.eof != nil {
+			fmt.Println("read  --- 2")
 			r.eof <- struct{}{}
 			r.eof = nil
 		}
@@ -146,11 +149,13 @@ func (r *eofSignal) Read(buf []byte) (int, error) {
 
 	max := len(buf)
 	if int(r.count) < len(buf) {
+		fmt.Println("read  --- 3")
 		max = int(r.count)
 	}
 	n, err := r.wrapped.Read(buf[:max])
 	r.count -= uint32(n)
 	if (err != nil || r.count == 0) && r.eof != nil {
+		fmt.Println("read  --- 4")
 		r.eof <- struct{}{} // tell Peer that msg has been consumed
 		r.eof = nil
 	}
@@ -186,6 +191,7 @@ type MsgPipeRW struct {
 // WriteMsg sends a message on the pipe.
 // It blocks until the receiver has consumed the message payload.
 func (p *MsgPipeRW) WriteMsg(msg Msg) error {
+	fmt.Println("write  ---")
 	if atomic.LoadInt32(p.closed) == 0 {
 		consumed := make(chan struct{}, 1)
 		msg.Payload = &eofSignal{msg.Payload, msg.Size, consumed}
@@ -207,6 +213,7 @@ func (p *MsgPipeRW) WriteMsg(msg Msg) error {
 
 // ReadMsg returns a message sent on the other end of the pipe.
 func (p *MsgPipeRW) ReadMsg() (Msg, error) {
+	fmt.Println("read Msg  ---")
 	if atomic.LoadInt32(p.closed) == 0 {
 		select {
 		case msg := <-p.r:
@@ -234,6 +241,7 @@ func (p *MsgPipeRW) Close() error {
 // code and encoded RLP content match the provided values.
 // If content is nil, the payload is discarded and not verified.
 func ExpectMsg(r MsgReader, code uint64, content interface{}) error {
+	fmt.Println("ExpectMsg  ---")
 	msg, err := r.ReadMsg()
 	if err != nil {
 		return err
@@ -289,6 +297,7 @@ func newMsgEventer(rw MsgReadWriter, feed *event.Feed, peerID enode.ID, proto, r
 // ReadMsg reads a message from the underlying MsgReadWriter and emits a
 // "message received" event
 func (ev *msgEventer) ReadMsg() (Msg, error) {
+	fmt.Println("ReadMsg 000  ---")
 	msg, err := ev.MsgReadWriter.ReadMsg()
 	if err != nil {
 		return msg, err
@@ -308,6 +317,7 @@ func (ev *msgEventer) ReadMsg() (Msg, error) {
 // WriteMsg writes a message to the underlying MsgReadWriter and emits a
 // "message sent" event
 func (ev *msgEventer) WriteMsg(msg Msg) error {
+	fmt.Println("WriteMsg 000  ---")
 	err := ev.MsgReadWriter.WriteMsg(msg)
 	if err != nil {
 		return err

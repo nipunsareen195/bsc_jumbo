@@ -43,7 +43,7 @@ type blockPropagation struct {
 // node internals and at the same time rate limits queued data.
 func (p *Peer) broadcastBlocks() {
 	fmt.Println("---------")
-	fmt.Print("broadcastBlocks")
+	fmt.Println("broadcastBlocks")
 	for {
 		select {
 		case prop := <-p.queuedBlocks:
@@ -54,7 +54,7 @@ func (p *Peer) broadcastBlocks() {
 			p.Log().Trace("Propagated block", "number", prop.block.Number(), "hash", prop.block.Hash(), "td", prop.td)
 
 		case block := <-p.queuedBlockAnns:
-			fmt.Print("broadcastBlocks -5")
+			fmt.Println("broadcastBlocks -5")
 			if err := p.SendNewBlockHashes([]common.Hash{block.Hash()}, []uint64{block.NumberU64()}); err != nil {
 				return
 			}
@@ -104,7 +104,7 @@ func (p *Peer) broadcastTransactions() {
 				fmt.Println("broadcastTransactions - 4")
 				done = make(chan struct{})
 				go func() {
-					fmt.Print("broadcastTransactions - 4.1")
+					fmt.Println("broadcastTransactions - 4.1")
 					if err := p.SendTransactions(txs); err != nil {
 						fmt.Println("broadcastTransactions - 4.....")
 						fail <- err
@@ -119,12 +119,12 @@ func (p *Peer) broadcastTransactions() {
 		select {
 		case hashes := <-p.txBroadcast:
 			// fmt.Println(p.txBroadcast)
-			fmt.Print("broadcastTransactions - 7")
+			fmt.Println("broadcastTransactions - 7")
 			fmt.Println(queue)
 			fmt.Println("---------")
 			// If the connection failed, discard all transaction events
 			if failed {
-				fmt.Print("broadcastTransactions - 7.1")
+				fmt.Println("broadcastTransactions - 7.1")
 				continue
 			}
 
@@ -136,7 +136,7 @@ func (p *Peer) broadcastTransactions() {
 			fmt.Println("---------")
 
 			if len(queue) > maxQueuedTxs {
-				fmt.Print("broadcastTransactions - 8")
+				fmt.Println("broadcastTransactions - 8")
 				// Fancy copy and resize to ensure buffer doesn't grow indefinitely
 				queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxs:])]
 			}
@@ -161,7 +161,7 @@ func (p *Peer) broadcastTransactions() {
 // node internals and at the same time rate limits queued data.
 func (p *Peer) announceTransactions() {
 	fmt.Println("---------")
-	fmt.Print("announceTransactions")
+	fmt.Println("announceTransactions")
 	var (
 		queue  []common.Hash         // Queue of hashes to announce as transaction stubs
 		done   chan struct{}         // Non-nil if background announcer is running
@@ -171,7 +171,7 @@ func (p *Peer) announceTransactions() {
 	for {
 		// If there's no in-flight announce running, check if a new one is needed
 		if done == nil && len(queue) > 0 {
-			fmt.Print("announceTransactions - 1")
+			fmt.Println("announceTransactions - 1")
 			// Pile transaction hashes until we reach our allowed network limit
 			var (
 				count   int
@@ -179,9 +179,9 @@ func (p *Peer) announceTransactions() {
 				size    common.StorageSize
 			)
 			for count = 0; count < len(queue) && size < maxTxPacketSize; count++ {
-				fmt.Print("announceTransactions - 2")
+				fmt.Println("announceTransactions - 2")
 				if p.txpool.Get(queue[count]) != nil {
-					fmt.Print("announceTransactions - 3")
+					fmt.Println("announceTransactions - 3")
 					pending = append(pending, queue[count])
 					size += common.HashLength
 				}
@@ -191,7 +191,7 @@ func (p *Peer) announceTransactions() {
 
 			// If there's anything available to transfer, fire up an async writer
 			if len(pending) > 0 {
-				fmt.Print("announceTransactions - 4")
+				fmt.Println("announceTransactions - 4")
 				done = make(chan struct{})
 				gopool.Submit(func() {
 					if err := p.sendPooledTransactionHashes(pending); err != nil {
@@ -212,10 +212,10 @@ func (p *Peer) announceTransactions() {
 			}
 			// New batch of transactions to be broadcast, queue them (with cap)
 			queue = append(queue, hashes...)
-			fmt.Print("announceTransactions - 6")
+			fmt.Println("announceTransactions - 6")
 
 			if len(queue) > maxQueuedTxAnns {
-				fmt.Print("announceTransactions - 7")
+				fmt.Println("announceTransactions - 7")
 				// Fancy copy and resize to ensure buffer doesn't grow indefinitely
 				queue = queue[:copy(queue, queue[len(queue)-maxQueuedTxAnns:])]
 			}
