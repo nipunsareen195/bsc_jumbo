@@ -95,6 +95,7 @@ type TxPool interface {
 
 // MakeProtocols constructs the P2P protocol definitions for `eth`.
 func MakeProtocols(backend Backend, network uint64, dnsdisc enode.Iterator) []p2p.Protocol {
+	fmt.Println("---MakeProtocols---")
 	protocols := make([]p2p.Protocol, len(ProtocolVersions))
 	for i, version := range ProtocolVersions {
 		version := version // Closure
@@ -152,6 +153,7 @@ func nodeInfo(chain *core.BlockChain, network uint64) *NodeInfo {
 func Handle(backend Backend, peer *Peer) error {
 	for {
 		if err := handleMessage(backend, peer); err != nil {
+			fmt.Println("--errrr")
 			peer.Log().Debug("Message handling failed in `eth`", "err", err)
 			return err
 		}
@@ -187,10 +189,16 @@ func handleMessage(backend Backend, peer *Peer) error {
 	// Read the next message from the remote peer, and ensure it's fully consumed
 	msg, err := peer.rw.ReadMsg()
 	fmt.Println("+++++3")
+	fmt.Println("msg:   ")
+	fmt.Println(msg)
+	fmt.Println("err:    ")
+	fmt.Println(err)
 	if err != nil {
 		return err
 	}
+
 	if msg.Size > maxMessageSize {
+		fmt.Println("////")
 		return fmt.Errorf("%w: %v > %v", errMsgTooLarge, msg.Size, maxMessageSize)
 	}
 	defer msg.Discard()
@@ -202,6 +210,7 @@ func handleMessage(backend Backend, peer *Peer) error {
 
 	// Track the amount of time it takes to serve the request and run the handler
 	if metrics.Enabled {
+		fmt.Println("/////1")
 		h := fmt.Sprintf("%s/%s/%d/%#02x", p2p.HandleHistName, ProtocolName, peer.Version(), msg.Code)
 		defer func(start time.Time) {
 			sampler := func() metrics.Sample {
@@ -213,7 +222,9 @@ func handleMessage(backend Backend, peer *Peer) error {
 		}(time.Now())
 	}
 	if handler := handlers[msg.Code]; handler != nil {
+		fmt.Println("/////2")
 		return handler(backend, msg, peer)
 	}
+	fmt.Println("/////3")
 	return fmt.Errorf("%w: %v", errInvalidMsgCode, msg.Code)
 }

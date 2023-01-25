@@ -346,20 +346,24 @@ func (p *Peer) readLoop(errc chan<- error) {
 func (p *Peer) handle(msg Msg) error {
 	switch {
 	case msg.Code == pingMsg:
+		fmt.Println("-----++++1")
 		msg.Discard()
 		gopool.Submit(func() {
 			SendItems(p.rw, pongMsg)
 		})
 	case msg.Code == discMsg:
+		fmt.Println("-----++++2")
 		// This is the last message. We don't need to discard or
 		// check errors because, the connection will be closed after it.
 		var m struct{ R DiscReason }
 		rlp.Decode(msg.Payload, &m)
 		return m.R
 	case msg.Code < baseProtocolLength:
+		fmt.Println("-----++++3")
 		// ignore other base protocol messages
 		return msg.Discard()
 	default:
+		fmt.Println("-----++++4")
 		// it's a subprotocol message
 		proto, err := p.getProto(msg.Code)
 		if err != nil {
