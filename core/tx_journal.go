@@ -18,6 +18,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 
@@ -118,10 +119,13 @@ func (journal *txJournal) load(add func([]*types.Transaction) []error) error {
 
 // insert adds the specified transaction to the local disk journal.
 func (journal *txJournal) insert(tx *types.Transaction) error {
+	fmt.Println("journalTx-----3")
 	if journal.writer == nil {
+		fmt.Println("journalTx-----4")
 		return errNoActiveJournal
 	}
 	if err := rlp.Encode(journal.writer, tx); err != nil {
+		fmt.Println("journalTx-----5")
 		return err
 	}
 	return nil

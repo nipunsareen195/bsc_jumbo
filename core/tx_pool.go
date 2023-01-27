@@ -858,11 +858,14 @@ func (pool *TxPool) enqueueTx(hash common.Hash, tx *types.Transaction, local boo
 // journalTx adds the specified transaction to the local disk journal if it is
 // deemed to have been sent from a local account.
 func (pool *TxPool) journalTx(from common.Address, tx *types.Transaction) {
+	fmt.Println("journalTx-----")
 	// Only journal if it's enabled and the transaction is local
 	if pool.journal == nil || !pool.locals.contains(from) {
+		fmt.Println("journalTx-----1")
 		return
 	}
 	if err := pool.journal.insert(tx); err != nil {
+		fmt.Println("journalTx-----2")
 		log.Warn("Failed to journal local transaction", "err", err)
 	}
 }
