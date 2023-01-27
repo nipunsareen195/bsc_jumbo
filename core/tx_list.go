@@ -305,6 +305,7 @@ func (l *txList) Overlaps(tx *types.Transaction) bool {
 // If the new transaction is accepted into the list, the lists' cost and gas
 // thresholds are also potentially updated.
 func (l *txList) Add(tx *types.Transaction, priceBump uint64) (bool, *types.Transaction) {
+	fmt.Println("----Put======= 0.1")
 	// If there's an older better transaction, abort
 	old := l.txs.Get(tx.Nonce())
 	if old != nil {
@@ -329,6 +330,7 @@ func (l *txList) Add(tx *types.Transaction, priceBump uint64) (bool, *types.Tran
 		}
 	}
 	// Otherwise overwrite the old transaction with the current one
+	fmt.Println("----Put=======0.1.1")
 	l.txs.Put(tx)
 	if cost := tx.Cost(); l.costcap.Cmp(cost) < 0 {
 		l.costcap = cost

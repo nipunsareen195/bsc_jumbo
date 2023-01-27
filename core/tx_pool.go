@@ -18,6 +18,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"math/big"
 	"sort"
@@ -933,6 +934,8 @@ func (pool *TxPool) AddRemote(tx *types.Transaction) error {
 
 // addTxs attempts to queue a batch of transactions if they are valid.
 func (pool *TxPool) addTxs(txs []*types.Transaction, local, sync bool) []error {
+
+	fmt.Println("------90909090900")
 	// Filter out known ones without obtaining the pool lock or recovering signatures
 	var (
 		errs = make([]error, len(txs))
@@ -1126,6 +1129,8 @@ func (pool *TxPool) queueTxEvent(tx *types.Transaction) {
 // call those methods directly, but request them being run using requestReset and
 // requestPromoteExecutables instead.
 func (pool *TxPool) scheduleReorgLoop() {
+
+	fmt.Println("----Put=======0.2")
 	defer pool.wg.Done()
 
 	var (
@@ -1178,6 +1183,7 @@ func (pool *TxPool) scheduleReorgLoop() {
 			if _, ok := queuedEvents[addr]; !ok {
 				queuedEvents[addr] = newTxSortedMap()
 			}
+			fmt.Println("----Put=======0.2.1")
 			queuedEvents[addr].Put(tx)
 
 		case <-curDone:
@@ -1196,6 +1202,8 @@ func (pool *TxPool) scheduleReorgLoop() {
 
 // runReorg runs reset and promoteExecutables on behalf of scheduleReorgLoop.
 func (pool *TxPool) runReorg(done chan struct{}, reset *txpoolResetRequest, dirtyAccounts *accountSet, events map[common.Address]*txSortedMap) {
+	fmt.Println("----Put=======0.3")
+
 	defer func(t0 time.Time) {
 		reorgDurationTimer.Update(time.Since(t0))
 	}(time.Now())
@@ -1267,6 +1275,7 @@ func (pool *TxPool) runReorg(done chan struct{}, reset *txpoolResetRequest, dirt
 		if _, ok := events[addr]; !ok {
 			events[addr] = newTxSortedMap()
 		}
+		fmt.Println("----Put=======0.3.1")
 		events[addr].Put(tx)
 	}
 	if len(events) > 0 {
