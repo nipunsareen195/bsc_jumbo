@@ -859,6 +859,10 @@ func (pool *TxPool) enqueueTx(hash common.Hash, tx *types.Transaction, local boo
 // deemed to have been sent from a local account.
 func (pool *TxPool) journalTx(from common.Address, tx *types.Transaction) {
 	fmt.Println("journalTx-----")
+	fmt.Println(pool.journal)
+	fmt.Println(from)
+	fmt.Println(pool.locals.contains(from))
+
 	// Only journal if it's enabled and the transaction is local
 	if pool.journal == nil || !pool.locals.contains(from) {
 		fmt.Println("journalTx-----1")
