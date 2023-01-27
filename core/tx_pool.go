@@ -700,9 +700,11 @@ func (pool *TxPool) validateTx(tx *types.Transaction, local bool) error {
 // be added to the allowlist, preventing any associated transaction from being dropped
 // out of the pool due to pricing constraints.
 func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err error) {
+	fmt.Println("add----1")
 	// If the transaction is already known, discard it
 	hash := tx.Hash()
 	if pool.all.Get(hash) != nil {
+		fmt.Println("add----2")
 		//log.Trace("Discarding already known transaction", "hash", hash)
 		knownTxMeter.Mark(1)
 		return false, ErrAlreadyKnown
@@ -713,14 +715,17 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 
 	// If the transaction fails basic validation, discard it
 	if err := pool.validateTx(tx, isLocal); err != nil {
+		fmt.Println("add----3")
 		//log.Trace("Discarding invalid transaction", "hash", hash, "err", err)
 		invalidTxMeter.Mark(1)
 		return false, err
 	}
 	// If the transaction pool is full, discard underpriced transactions
 	if uint64(pool.all.Slots()+numSlots(tx)) > pool.config.GlobalSlots+pool.config.GlobalQueue {
+		fmt.Println("add----4")
 		// If the new transaction is underpriced, don't accept it
 		if !isLocal && pool.priced.Underpriced(tx) {
+			fmt.Println("add----5")
 			//log.Trace("Discarding underpriced transaction", "hash", hash, "gasTipCap", tx.GasTipCap(), "gasFeeCap", tx.GasFeeCap())
 			underpricedTxMeter.Mark(1)
 			return false, ErrUnderpriced
@@ -730,6 +735,7 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 		// do too many replacements between reorg-runs, so we cap the number of
 		// replacements to 25% of the slots
 		if pool.changesSinceReorg > int(pool.config.GlobalSlots/4) {
+			fmt.Println("add----6")
 			throttleTxMeter.Mark(1)
 			return false, ErrTxPoolOverflow
 		}
@@ -741,6 +747,7 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 
 		// Special case, we still can't make the room for the new remote one.
 		if !isLocal && !success {
+			fmt.Println("add----7")
 			//log.Trace("Discarding overflown transaction", "hash", hash)
 			overflowedTxMeter.Mark(1)
 			return false, ErrTxPoolOverflow
@@ -749,22 +756,28 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 		pool.changesSinceReorg += len(drop)
 		// Kick out the underpriced remote transactions.
 		for _, tx := range drop {
+			fmt.Println("add----8")
 			//log.Trace("Discarding freshly underpriced transaction", "hash", tx.Hash(), "gasTipCap", tx.GasTipCap(), "gasFeeCap", tx.GasFeeCap())
 			underpricedTxMeter.Mark(1)
 			pool.removeTx(tx.Hash(), false)
 		}
 	}
 	// Try to replace an existing transaction in the pending pool
+
+	fmt.Println("add----9")
 	from, _ := types.Sender(pool.signer, tx) // already validated
 	if list := pool.pending[from]; list != nil && list.Overlaps(tx) {
+		fmt.Println("add----10")
 		// Nonce already pending, check if required price bump is met
 		inserted, old := list.Add(tx, pool.config.PriceBump)
 		if !inserted {
+			fmt.Println("add----11")
 			pendingDiscardMeter.Mark(1)
 			return false, ErrReplaceUnderpriced
 		}
 		// New transaction is better, replace old one
 		if old != nil {
+			fmt.Println("add----12")
 			pool.all.Remove(old.Hash())
 			pool.priced.Removed(1)
 			pendingReplaceMeter.Mark(1)
@@ -782,15 +795,18 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 	// New transaction isn't replacing a pending one, push into queue
 	replaced, err = pool.enqueueTx(hash, tx, isLocal, true)
 	if err != nil {
+		fmt.Println("add----13")
 		return false, err
 	}
 	// Mark local addresses and journal local transactions
 	if local && !pool.locals.contains(from) {
+		fmt.Println("add----14")
 		//log.Info("Setting new local account", "address", from)
 		pool.locals.add(from)
 		pool.priced.Removed(pool.all.RemoteToLocals(pool.locals)) // Migrate the remotes if it's marked as local first time.
 	}
 	if isLocal {
+		fmt.Println("add----15")
 		localGauge.Inc(1)
 	}
 	pool.journalTx(from, tx)
@@ -936,6 +952,7 @@ func (pool *TxPool) AddRemote(tx *types.Transaction) error {
 func (pool *TxPool) addTxs(txs []*types.Transaction, local, sync bool) []error {
 
 	fmt.Println("------90909090900")
+
 	// Filter out known ones without obtaining the pool lock or recovering signatures
 	var (
 		errs = make([]error, len(txs))
