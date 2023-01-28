@@ -289,6 +289,7 @@ type txpoolResetRequest struct {
 // NewTxPool creates a new transaction pool to gather, sort and filter inbound
 // transactions from the network.
 func NewTxPool(config TxPoolConfig, chainconfig *params.ChainConfig, chain blockChain) *TxPool {
+	fmt.Println("NewTxPool-----1")
 	// Sanitize the input to ensure no vulnerable gas prices are set
 	config = (&config).sanitize()
 
@@ -325,6 +326,7 @@ func NewTxPool(config TxPoolConfig, chainconfig *params.ChainConfig, chain block
 
 	// If local transactions and journaling is enabled, load from disk
 	if !config.NoLocals && config.Journal != "" {
+		fmt.Println("NewTxPool-----2")
 		pool.journal = newTxJournal(config.Journal)
 
 		if err := pool.journal.load(pool.AddLocals); err != nil {
@@ -819,6 +821,7 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 //
 // Note, this method assumes the pool lock is held!
 func (pool *TxPool) enqueueTx(hash common.Hash, tx *types.Transaction, local bool, addAll bool) (bool, error) {
+	fmt.Println("enqueueTx----1")
 	// Try to insert the transaction into the future queue
 	from, _ := types.Sender(pool.signer, tx) // already validated
 	if pool.queue[from] == nil {
@@ -826,30 +829,36 @@ func (pool *TxPool) enqueueTx(hash common.Hash, tx *types.Transaction, local boo
 	}
 	inserted, old := pool.queue[from].Add(tx, pool.config.PriceBump)
 	if !inserted {
+		fmt.Println("enqueueTx----2")
 		// An older transaction was better, discard this
 		queuedDiscardMeter.Mark(1)
 		return false, ErrReplaceUnderpriced
 	}
 	// Discard any previous transaction and mark this
 	if old != nil {
+		fmt.Println("enqueueTx----3")
 		pool.all.Remove(old.Hash())
 		pool.priced.Removed(1)
 		queuedReplaceMeter.Mark(1)
 	} else {
+		fmt.Println("enqueueTx----4")
 		// Nothing was replaced, bump the queued counter
 		queuedGauge.Inc(1)
 	}
 	// If the transaction isn't in lookup set but it's expected to be there,
 	// show the error log.
 	if pool.all.Get(hash) == nil && !addAll {
+		fmt.Println("enqueueTx----5")
 		log.Error("Missing transaction in lookup set, please report the issue", "hash", hash)
 	}
 	if addAll {
+		fmt.Println("enqueueTx----6")
 		pool.all.Add(tx, local)
 		pool.priced.Put(tx, local)
 	}
 	// If we never record the heartbeat, do it right now.
 	if _, exist := pool.beats[from]; !exist {
+		fmt.Println("enqueueTx----7")
 		pool.beats[from] = time.Now()
 	}
 	return old != nil, nil
