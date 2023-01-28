@@ -56,12 +56,15 @@ type Encoder interface {
 // Please see package-level documentation of encoding rules.
 func Encode(w io.Writer, val interface{}) error {
 	// Optimization: reuse *encBuffer when called by EncodeRLP.
+	fmt.Println("journalTx-----6")
 	if buf := encBufferFromWriter(w); buf != nil {
+		fmt.Println("journalTx-----7")
 		return buf.encode(val)
 	}
 
 	buf := getEncBuffer()
 	defer encBufferPool.Put(buf)
+	fmt.Println("journalTx-----8")
 	if err := buf.encode(val); err != nil {
 		return err
 	}

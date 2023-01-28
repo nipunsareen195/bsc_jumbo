@@ -1,6 +1,7 @@
 package rlp
 
 import (
+	"fmt"
 	"io"
 	"math/big"
 	"reflect"
@@ -167,6 +168,7 @@ func (buf *encBuffer) listEnd(index int) {
 }
 
 func (buf *encBuffer) encode(val interface{}) error {
+	fmt.Println("journalTx-----9")
 	rval := reflect.ValueOf(val)
 	writer, err := cachedWriter(rval.Type())
 	if err != nil {
