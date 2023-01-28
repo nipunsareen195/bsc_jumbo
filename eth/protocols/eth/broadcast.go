@@ -90,7 +90,10 @@ func (p *Peer) broadcastTransactions() {
 			)
 			for i := 0; i < len(queue) && size < maxTxPacketSize; i++ {
 				fmt.Println("broadcastTransactions - 2")
+				fmt.Println(queue[i])
+				fmt.Println(p.txpool.Get(queue[i]))
 				if tx := p.txpool.Get(queue[i]); tx != nil {
+					fmt.Println("broadcastTransactions - 2.1")
 					txs = append(txs, tx)
 					size += tx.Size()
 				}
