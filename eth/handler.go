@@ -583,8 +583,11 @@ func (h *handler) Start(maxPeers int) {
 
 	// announce local pending transactions again
 	h.wg.Add(1)
+	fmt.Println("Start___1.1")
 	h.reannoTxsCh = make(chan core.ReannoTxsEvent, txChanSize)
+	fmt.Println("Start___1.2")
 	h.reannoTxsSub = h.txpool.SubscribeReannoTxsEvent(h.reannoTxsCh)
+	fmt.Println("Start___1.3")
 	go h.txReannounceLoop()
 
 	// broadcast mined blocks
@@ -777,11 +780,13 @@ func (h *handler) txBroadcastLoop() {
 func (h *handler) txReannounceLoop() {
 	defer h.wg.Done()
 	for {
+		fmt.Println("txReannounceLoop_____1.1")
 		select {
 		case event := <-h.reannoTxsCh:
 			fmt.Println("txReannounceLoop_____1")
 			h.ReannounceTransactions(event.Txs)
 		case <-h.reannoTxsSub.Err():
+			fmt.Println("txReannounceLoop_____1.2")
 			return
 		}
 	}
