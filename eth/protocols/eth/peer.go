@@ -250,6 +250,8 @@ func (p *Peer) sendPooledTransactionHashes(hashes []common.Hash) error {
 func (p *Peer) AsyncSendPooledTransactionHashes(hashes []common.Hash) {
 	select {
 	case p.txAnnounce <- hashes:
+		fmt.Println("txReannounceLoop_____3")
+		fmt.Println(hashes)
 		// Mark all the transactions as known, but ensure we don't overflow our limits
 		p.knownTxs.Add(hashes...)
 	case <-p.txTerm:

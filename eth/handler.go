@@ -728,7 +728,10 @@ func (h *handler) BroadcastTransactions(txs types.Transactions) {
 // to a square root of all peers.
 func (h *handler) ReannounceTransactions(txs types.Transactions) {
 	hashes := make([]common.Hash, 0, txs.Len())
+	fmt.Println("txReannounceLoop_____2")
+	fmt.Println(hashes)
 	for _, tx := range txs {
+		fmt.Println(tx)
 		hashes = append(hashes, tx.Hash())
 	}
 
@@ -736,6 +739,7 @@ func (h *handler) ReannounceTransactions(txs types.Transactions) {
 	peersCount := uint(math.Sqrt(float64(h.peers.len())))
 	peers := h.peers.headPeers(peersCount)
 	for _, peer := range peers {
+		fmt.Println(peer)
 		peer.AsyncSendPooledTransactionHashes(hashes)
 	}
 	log.Debug("Transaction reannounce", "txs", len(txs),
@@ -775,6 +779,7 @@ func (h *handler) txReannounceLoop() {
 	for {
 		select {
 		case event := <-h.reannoTxsCh:
+			fmt.Println("txReannounceLoop_____1")
 			h.ReannounceTransactions(event.Txs)
 		case <-h.reannoTxsSub.Err():
 			return
