@@ -18,6 +18,7 @@ package eth
 
 import (
 	"errors"
+	"fmt"
 	"math/big"
 	"sync"
 	"time"
@@ -437,6 +438,7 @@ func (ps *peerSet) peersWithoutBlock(hash common.Hash) []*ethPeer {
 // peersWithoutTransaction retrieves a list of peers that do not have a given
 // transaction in their set of known hashes.
 func (ps *peerSet) peersWithoutTransaction(hash common.Hash) []*ethPeer {
+	fmt.Println("peersWithoutTransaction")
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
