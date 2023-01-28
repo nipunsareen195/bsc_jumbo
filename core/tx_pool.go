@@ -1415,6 +1415,7 @@ func (pool *TxPool) reset(oldHead, newHead *types.Header) {
 // future queue to the set of pending transactions. During this process, all
 // invalidated transactions (low nonce, low balance) are deleted.
 func (pool *TxPool) promoteExecutables(accounts []common.Address) []*types.Transaction {
+	fmt.Println("promoteExecutables")
 	// Track the promoted transactions to broadcast them at once
 	var promoted []*types.Transaction
 

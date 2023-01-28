@@ -106,6 +106,8 @@ func (p *Peer) broadcastTransactions() {
 			if len(txs) > 0 {
 				fmt.Println("broadcastTransactions - 4")
 				done = make(chan struct{})
+				fmt.Println("+++++++++ chan struct")
+				fmt.Println(done)
 				go func() {
 					fmt.Println("broadcastTransactions - 4.1")
 					if err := p.SendTransactions(txs); err != nil {

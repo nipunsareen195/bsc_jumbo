@@ -450,6 +450,7 @@ func (ps *peerSet) peersWithoutTransaction(hash common.Hash) []*ethPeer {
 			list = append(list, p)
 		}
 	}
+	fmt.Println(list)
 	return list
 }
 
