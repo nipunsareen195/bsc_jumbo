@@ -715,6 +715,10 @@ func (h *handler) BroadcastTransactions(txs types.Transactions) {
 	fmt.Println("Transaction broadcast", "txs", len(txs),
 		"announce packs", annoPeers, "announced hashes", annoCount,
 		"tx packs", directPeers, "broadcast txs", directCount)
+
+	fmt.Println(directPeers)
+	fmt.Println("___")
+	fmt.Println(directCount)
 	log.Debug("Transaction broadcast", "txs", len(txs),
 		"announce packs", annoPeers, "announced hashes", annoCount,
 		"tx packs", directPeers, "broadcast txs", directCount)
