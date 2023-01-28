@@ -18,6 +18,7 @@ package eth
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"math/big"
 	"sync"
@@ -571,6 +572,7 @@ func (h *handler) unregisterPeer(id string) {
 }
 
 func (h *handler) Start(maxPeers int) {
+	fmt.Println("Start___1")
 	h.maxPeers = maxPeers
 
 	// broadcast transactions
@@ -675,6 +677,7 @@ func (h *handler) BroadcastBlock(block *types.Block, propagate bool) {
 // - And, separately, as announcements to all peers which are not known to
 // already have the given transaction.
 func (h *handler) BroadcastTransactions(txs types.Transactions) {
+	fmt.Println("Start___3")
 	var (
 		annoCount   int // Count of announcements made
 		annoPeers   int
@@ -708,6 +711,7 @@ func (h *handler) BroadcastTransactions(txs types.Transactions) {
 		annoCount += len(hashes)
 		peer.AsyncSendPooledTransactionHashes(hashes)
 	}
+	fmt.Println("Start___4")
 	log.Debug("Transaction broadcast", "txs", len(txs),
 		"announce packs", annoPeers, "announced hashes", annoCount,
 		"tx packs", directPeers, "broadcast txs", directCount)
@@ -749,6 +753,8 @@ func (h *handler) txBroadcastLoop() {
 	for {
 		select {
 		case event := <-h.txsCh:
+			fmt.Println("Start___2")
+			fmt.Println(event.Txs)
 			h.BroadcastTransactions(event.Txs)
 		case <-h.txsSub.Err():
 			return
