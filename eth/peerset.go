@@ -443,7 +443,9 @@ func (ps *peerSet) peersWithoutTransaction(hash common.Hash) []*ethPeer {
 	defer ps.lock.RUnlock()
 
 	list := make([]*ethPeer, 0, len(ps.peers))
+	fmt.Println(list)
 	for _, p := range ps.peers {
+		fmt.Println(p)
 		if !p.KnownTransaction(hash) {
 			list = append(list, p)
 		}
